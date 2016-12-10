@@ -28,20 +28,22 @@ public class DetailActivity extends Activity {
         final TextView txtCountry = (TextView) findViewById(R.id.resortCountry);
         final TextView txtCoord = (TextView) findViewById(R.id.resortCoordinates);
         final TextView txtSlopes = (TextView) findViewById(R.id.resortSlopes);
-        final TextView myNotes = (TextView) findViewById(R.id.myNotes);
+        final TextView month = (TextView) findViewById(R.id.month);
+        final TextView visitors = (TextView) findViewById(R.id.visitors);
 
         Intent i = getIntent();
         // getting attached intent data
-        String name = i.getStringExtra("name");
-        String coordinates = i.getStringExtra("coordinates");
-        String country = i.getStringExtra("country");
-        String slopes = i.getStringExtra("slopes");
-        // displaying selected resort name
+        String name = i.getStringExtra(getResources().getString(R.string.id));
+        String coordinates = i.getStringExtra(getResources().getString(R.string.coords));
+        String country = i.getStringExtra(getResources().getString(R.string.country));
+        double slopes = i.getDoubleExtra(getResources().getString(R.string.slopes), 0);
+        final int id = i.getIntExtra(getResources().getString(R.string.id), 0);
         txtName.setText(name);
         txtCountry.setText(country);
-        txtSlopes.setText(slopes);
+        txtSlopes.setText(Double.toString(slopes));
         txtCoord.setText(coordinates);
-        myNotes.setText("");
+        month.setText(getResources().getString(R.string.emptyString));
+        visitors.setText(getResources().getString(R.string.emptyString));
 
         Button submit = (Button) findViewById(R.id.resortSubmit);
         Button send = (Button) findViewById(R.id.resortSendMail);
@@ -50,8 +52,14 @@ public class DetailActivity extends Activity {
             @Override
             public void onClick(View v) {
                 String resortName = txtName.getText().toString();
-                Log.v(TAG, "onClick: " + resortName);
-                System.out.println(TAG + "onClick: " + resortName);
+                Intent retIntent = new Intent(getApplicationContext(), DetailActivity.class);
+                retIntent.putExtra(getResources().getString(R.string.name), txtName.getText().toString());
+                retIntent.putExtra(getResources().getString(R.string.coords), txtCoord.getText().toString());
+                retIntent.putExtra(getResources().getString(R.string.country), txtCountry.getText().toString());
+                retIntent.putExtra(getResources().getString(R.string.slopes), txtSlopes.getText().toString());
+                retIntent.putExtra(getResources().getString(R.string.id), id);
+                setResult(Activity.RESULT_OK, retIntent);
+                finish();
             }
         });
 

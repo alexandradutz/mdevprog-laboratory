@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <TextView
@@ -87,7 +88,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginBottom="4dp"
-        android:layout_marginStart="4dp"
         android:layout_marginEnd="4dp"
         android:layout_marginTop="6dp"
         android:hint="@string/name" />
@@ -98,18 +98,33 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal">
         <TextView
-            android:text="Notes"
+            android:text="Visitors Per month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"/>
         <EditText
-            android:id="@+id/myNotes"
+            android:id="@+id/month"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="4dp"
-            android:layout_marginStart="4dp"
             android:layout_marginEnd="4dp"
             android:layout_marginTop="6dp"
             />
+        <EditText
+            android:id="@+id/visitors"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="6dp"
+            android:layout_marginStart="60dp"
+            />
+        <Button
+            android:id="@+id/visitorsSubmit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:width="2dp"
+            android:height="2dp"
+            android:text="Add" />
     </LinearLayout>
 
     <LinearLayout
@@ -129,4 +144,13 @@
             android:layout_height="wrap_content"
             android:text="Send" />
     </LinearLayout>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@android:drawable/ic_dialog_email" />
+
 </LinearLayout>

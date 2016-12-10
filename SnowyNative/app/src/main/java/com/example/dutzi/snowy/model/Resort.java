@@ -1,5 +1,7 @@
 package com.example.dutzi.snowy.model;
 
+import java.util.HashMap;
+
 /**
  * Created by dutzi on 06.11.2016.
  */
@@ -10,6 +12,7 @@ public class Resort {
     private String coordinates;
     private String country;
     private double slopes_km;
+    private HashMap<String, Integer> visitorsPerSeason;
 
     public Resort(String name) {
         this.name = name;
@@ -20,6 +23,27 @@ public class Resort {
         this.coordinates = coordinates;
         this.country = country;
         this.slopes_km = slopes_km;
+        this.visitorsPerSeason = new HashMap<>();
+    }
+
+    public void addVisitors(String month, Integer number) {
+        visitorsPerSeason.put(month, number);
+    }
+
+    public int getVisitors(int month) {
+        Integer vis;
+        switch(month) {
+            case 0:
+                return visitorsPerSeason.get("NOV");
+            case 1:
+                return visitorsPerSeason.get("DEC");
+            case 2:
+                return visitorsPerSeason.get("JAN");
+            case 3:
+                return visitorsPerSeason.get("FEB");
+            default:
+                return -1;
+        }
     }
 
     public int getId() {
