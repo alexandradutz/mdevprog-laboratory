@@ -6,7 +6,11 @@ import {
   Navigator,
   TouchableOpacity,
   Text,
-  AsyncStorage
+  AsyncStorage,
+  TouchableHighlight,
+  TextInput,
+  Switch,
+  Alert
 } from 'react-native';
 
 import * as Progress from 'react-native-progress';
@@ -41,32 +45,34 @@ class ListScreen extends React.Component {
     this.state = {
         dataSource: ds.cloneWithRows(['row 1', 'row 2']),
         resorts:[],
-        loaded:false
+        loaded:false,
+        tempResort: {name:'',visited:false,country:''},
+        toBeDeleted: 0
     };
   }
 
   componentDidMount(){
-      console.log(this);
       this.fetchData().done();
       this.addResort = this.addResort.bind(this);
       this.del = this.del.bind(this);
 };
 
 fetchData=async()=>{
-    console.log("THIS");
-    console.log(this);
+    // console.error("THIS");
+
     const value = await AsyncStorage.getItem('@Resorts:what');
     try {
-        this.state.resorts = JSON.parse(value);
+        if(value) {
+            this.state.resorts = JSON.parse(value);
+        }
+        else {
+            this.setState({tempResort:{name:"name", visited:false, country:"country"}, toBeDeleted:0});
+            this.addResort();
+        }
+
     } catch(error) {
         console.log(error);
     }
-    finally{
-        if(this.state.resorts.length<1){
-            var res1={id:0,name:"name1",visited:"true",country:"country1"};
-            this.state.resorts.push(res1);
-        }
-        }
 
 this.setState({
   dataSource:this.state.dataSource.cloneWithRows(this.state.resorts),
@@ -75,9 +81,9 @@ this.setState({
 
 } //fetchData
 
-del(it){
+del(){
     var x = this.state.resorts.slice();
-    x.splice(it, 1);
+    x.splice(this.state.toBeDeleted, 1);
     AsyncStorage.setItem('@Resorts:what', JSON.stringify(x));
     this.setState({
         dataSource:this.state.dataSource.cloneWithRows(x),
@@ -85,28 +91,27 @@ del(it){
     });
 }
 
-addResort(it,n,v,c){
+delAlert(){
+    Alert.alert( 'Delete Action', 'Are you sure you want to delete this?',
+        [ {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
+          {text: 'OK', onPress: () => {this.del}}, ] );
+}
 
-     var edited = false;
+addResort(){
      var x = this.state.resorts.slice();
-     for(var i=0;i<x.length;i++){
-       if(x[i].id==it){
-         var res1={id:it,name:n,visited:v,country:c};
-         x[i] = res1;
-         edited=true;
-       }
+     if(this.state.tempResort.name != "") {
+         var res1 = {id:x.length, name:this.state.tempResort.name, visited:this.state.tempResort.visited, country:this.state.tempResort.country};
+         x.push(res1);
      }
-     if(!edited){
-       var res1={id:x.length,name:n,visited:v,country:c};
-       x.push(res1);
-     }
-      AsyncStorage.setItem('@Resorts:what', JSON.stringify(x));
-     //  console.log("xyz");
-     //  console.warn(JSON.stringify(x));
+     AsyncStorage.setItem('@Resorts:what', JSON.stringify(x));
       this.setState({
              dataSource: this.state.dataSource.cloneWithRows(x),
              resorts:x,
     });
+ }
+
+ updateResort() {
+
  }
 
   render(){
@@ -118,6 +123,28 @@ addResort(it,n,v,c){
      );
     }
     return (
+        <View style={styles.container}>
+        <View>
+        <TextInput placeholder={'Name'} onChangeText={(text) => this.setState({tempResort:{
+                                                                                            name:text,
+                                                                                            visited:this.state.tempResort.visited,
+                                                                                            country:this.state.tempResort.country}}) } />
+        <Text style={{paddingTop: 10}}>Visited</Text><Switch onValueChange={(value)=> this.setState({tempResort:{
+                                                                                            name:this.state.tempResort.name,
+                                                                                            visited:value,
+                                                                                            country:this.state.tempResort.country}})}
+                                                    value={this.state.tempResort.visited} />
+        <TextInput placeholder={'Country'} onChangeText={(text) => this.setState({tempResort:{
+                                                                                            name:this.state.tempResort.name,
+                                                                                            visited:this.state.tempResort.visited,
+                                                                                            country:text}}) } />
+        </View>
+
+        <TouchableHighlight onPress={this.addResort}>
+            <Text style={{ color: 'black', padding: 10, fontSize: 15}}>Add Resort</Text>
+        </TouchableHighlight>
+
+
       	<ListView style={styles.container}
           enableEmptySections={true}
           dataSource={this.state.dataSource}
@@ -130,7 +157,8 @@ addResort(it,n,v,c){
                    country: rowData.country,
                    addFunction: this.addResort,
                    delFunction: this.del
-                }})}>
+               }})}
+               onLongPress={() => {this.setState({toBeDeleted:rowData.id}); this.delAlert()}}>
                <View>
                  <Text style={styles.symbol}>{rowData.name}</Text>
                </View>
@@ -140,6 +168,7 @@ addResort(it,n,v,c){
             <View key={rowID} style={{height:1, backgroundColor: 'lightgray'}}/>
           }
        	/>
+        </View>
     );
   }
 }

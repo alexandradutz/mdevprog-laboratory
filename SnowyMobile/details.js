@@ -49,7 +49,10 @@ class DetailScreen extends Component {
         <TextInput placeholder={this.props.country} onChangeText={(text) => this.setState({country:text}) } />
 
         <TouchableHighlight onPress={this.startIntent}>
-            <Text style={{ color: 'black', padding: 50, fontSize: 15}}>Send mail</Text>
+            <Text style={{ color: 'black', padding: 10, fontSize: 15}}>Submit</Text>
+        </TouchableHighlight>
+        <TouchableHighlight onPress={this.startIntent}>
+            <Text style={{ color: 'black', padding: 10, fontSize: 15}}>Send mail</Text>
         </TouchableHighlight>
       </View>
     );
