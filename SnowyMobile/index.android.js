@@ -30,9 +30,9 @@ const routes = [
   }
 ]
 
-class SnowyMobile extends Component {
-  state = {
-  }
+export default class SnowyMobile extends Component {
+  // state = {
+  // }
 
   render() {
     return (
@@ -47,7 +47,7 @@ class SnowyMobile extends Component {
               renderScene={
                 (route, navigator) => {
                   switch (route.index) {
-                    case 0: return (<ListScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
+                    case 0: return (<ListScreen ref="listScreen" navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
                     case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
                   }
                 }
