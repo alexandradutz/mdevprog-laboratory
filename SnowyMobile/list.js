@@ -16,6 +16,7 @@ import {
 import * as Progress from 'react-native-progress';
 
 import InfiniteScrollView from 'react-native-infinite-scroll-view';
+import update from 'immutability-helper';
 
 var DomParser = require('xmldom').DOMParser;
 
@@ -55,12 +56,13 @@ class ListScreen extends React.Component {
       this.fetchData().done();
       this.addResort = this.addResort.bind(this);
       this.del = this.del.bind(this);
+      this.updateResort = this.updateResort.bind(this);
 };
 
 fetchData=async()=>{
     // console.error("THIS");
 
-    const value = await AsyncStorage.getItem('@Resorts:what');
+    const value = await AsyncStorage.getItem('@Resorts:storage');
     try {
         if(value) {
             this.state.resorts = JSON.parse(value);
@@ -84,7 +86,7 @@ this.setState({
 del(){
     var x = this.state.resorts.slice();
     x.splice(this.state.toBeDeleted, 1);
-    AsyncStorage.setItem('@Resorts:what', JSON.stringify(x));
+    AsyncStorage.setItem('@Resorts:storage', JSON.stringify(x));
     this.setState({
         dataSource:this.state.dataSource.cloneWithRows(x),
         resorts:x
@@ -103,14 +105,35 @@ addResort(){
          var res1 = {id:x.length, name:this.state.tempResort.name, visited:this.state.tempResort.visited, country:this.state.tempResort.country};
          x.push(res1);
      }
-     AsyncStorage.setItem('@Resorts:what', JSON.stringify(x));
+     AsyncStorage.setItem('@Resorts:storage', JSON.stringify(x));
       this.setState({
              dataSource: this.state.dataSource.cloneWithRows(x),
              resorts:x,
     });
  }
 
- updateResort() {
+ updateResort(id, n, v, c) {
+     var x = this.state.resorts.slice();
+     var i = 0;
+     while(i < x.length)
+     {
+         if(this.state.resorts[i].id == id)
+         {
+             break;
+         }
+         else {
+             i = i+1;
+         }
+     }
+     if(i < x.length)
+     {
+         x[i].name = n;
+     }
+     AsyncStorage.setItem('@Resorts:storage', JSON.stringify(x));
+     this.setState({
+         dataSource: this.state.dataSource.cloneWithRows(x),
+         resorts: x,
+    });
 
  }
 
@@ -156,7 +179,8 @@ addResort(){
                    visited: rowData.visited,
                    country: rowData.country,
                    addFunction: this.addResort,
-                   delFunction: this.del
+                   delFunction: this.del,
+                   updateResort: this.updateResort
                }})}
                onLongPress={() => {this.setState({toBeDeleted:rowData.id}); this.delAlert()}}>
                <View>
