@@ -1,14 +1,17 @@
 package com.example.dutzi.snowy;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -18,6 +21,7 @@ import android.widget.TextView;
 
 public class DetailActivity extends Activity {
     private static final String TAG = DetailActivity.class.getSimpleName();
+    private static final int REQUEST_CODE_PICKER = 0;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -30,10 +34,11 @@ public class DetailActivity extends Activity {
         final TextView txtSlopes = (TextView) findViewById(R.id.resortSlopes);
         final TextView month = (TextView) findViewById(R.id.month);
         final TextView visitors = (TextView) findViewById(R.id.visitors);
+        final TextView visitedOn = (TextView) findViewById(R.id.visitedOnDate);
 
         Intent i = getIntent();
         // getting attached intent data
-        String name = i.getStringExtra(getResources().getString(R.string.id));
+        String name = i.getStringExtra(getResources().getString(R.string.name));
         String coordinates = i.getStringExtra(getResources().getString(R.string.coords));
         String country = i.getStringExtra(getResources().getString(R.string.country));
         double slopes = i.getDoubleExtra(getResources().getString(R.string.slopes), 0);
@@ -44,9 +49,12 @@ public class DetailActivity extends Activity {
         txtCoord.setText(coordinates);
         month.setText(getResources().getString(R.string.emptyString));
         visitors.setText(getResources().getString(R.string.emptyString));
+        visitedOn.setText(R.string.emptyString);
 
         Button submit = (Button) findViewById(R.id.resortSubmit);
-        Button send = (Button) findViewById(R.id.resortSendMail);
+        FloatingActionButton send = (FloatingActionButton) findViewById(R.id.fab);
+        Button visitorsSubmit = (Button) findViewById(R.id.visitorsSubmit);
+        Button setDateBtn = (Button) findViewById(R.id.setDate);
 
         submit.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -58,6 +66,29 @@ public class DetailActivity extends Activity {
                 retIntent.putExtra(getResources().getString(R.string.country), txtCountry.getText().toString());
                 retIntent.putExtra(getResources().getString(R.string.slopes), txtSlopes.getText().toString());
                 retIntent.putExtra(getResources().getString(R.string.id), id);
+                retIntent.putExtra(getResources().getString(R.string.requestCode), 0);
+                setResult(Activity.RESULT_OK, retIntent);
+                finish();
+            }
+        });
+
+
+        setDateBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent pickerIntent = new Intent(getApplicationContext(), DatePickerActivity.class);
+                startActivityForResult(pickerIntent, REQUEST_CODE_PICKER);
+            }
+        });
+
+        visitorsSubmit.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent retIntent = new Intent(getApplicationContext(), DetailActivity.class);
+                retIntent.putExtra(getResources().getString(R.string.visitors), visitors.getText().toString());
+                retIntent.putExtra(getResources().getString(R.string.month), month.getText().toString());
+                retIntent.putExtra(getResources().getString(R.string.id), id);
+                retIntent.putExtra(getResources().getString(R.string.requestCode), 1);
                 setResult(Activity.RESULT_OK, retIntent);
                 finish();
             }
@@ -77,5 +108,20 @@ public class DetailActivity extends Activity {
             }
         });
 
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(requestCode == REQUEST_CODE_PICKER)
+        {
+            if(resultCode == Activity.RESULT_OK)
+            {
+                int month = data.getIntExtra("month", 0);
+                int day = data.getIntExtra("day", 0);
+                int year = data.getIntExtra("year",0);
+                TextView visitedOn = (TextView) findViewById(R.id.visitedOnDate);
+                visitedOn.setText(day + " " + month + " " + year);
+            }
+        }
     }
 }

@@ -32,34 +32,57 @@ public class MainActivity extends AppCompatActivity {
     private List<Resort> db_itemList;
     private ArrayAdapter<Resort> adapter;
 
+    protected Resort get_resort_by_id(int id)
+    {
+        for(Resort r : itemList)
+        {
+            if(r.getId() == id)
+            {
+                return r;
+            }
+        }
+        return null;
+    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if(requestCode==0) { //DetailsActivity
+        if(requestCode==0) {    //DetailsActivity
             if(resultCode== Activity.RESULT_OK) {
-                String name = data.getStringExtra(getResources().getString(R.string.name));
-                String coordinates = data.getStringExtra(getResources().getString(R.string.coords));
-                String country = data.getStringExtra(getResources().getString(R.string.country));
-                double slopes = data.getDoubleExtra(getResources().getString(R.string.slopes), 0);
-                final int id = data.getIntExtra(getResources().getString(R.string.id), 0);
-                Resort res = new Resort(name, coordinates, country, slopes);
-                res.setId(id);
-                int ret = dbManager.updateResort(res);
-                if (ret != 0) {
-                    DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+                if(data.getIntExtra(getResources().getString(R.string.requestCode), -1) == 0) {
+                    String name = data.getStringExtra(getResources().getString(R.string.name));
+                    String coordinates = data.getStringExtra(getResources().getString(R.string.coords));
+                    String country = data.getStringExtra(getResources().getString(R.string.country));
+                    double slopes = data.getDoubleExtra(getResources().getString(R.string.slopes), 0);
+                    final int id = data.getIntExtra(getResources().getString(R.string.id), 0);
+                    Resort res = new Resort(name, coordinates, country, slopes);
+                    res.setId(id);
+                    int ret = dbManager.updateResort(res);
+                    if (ret != 0) {
+                        DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
 
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            setTheme(R.style.AppTheme);
-                            switch (which){
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    break;
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                setTheme(R.style.AppTheme);
+                                switch (which) {
+                                    case DialogInterface.BUTTON_POSITIVE:
+                                        break;
+                                }
                             }
-                        }
-                    };
+                        };
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
-                    builder.setMessage("Resort " + res.getName() + " updated!").setPositiveButton("Ok", dialogClickListener).show();
+                        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                        builder.setMessage("Resort " + res.getName() + " updated!").setPositiveButton("Ok", dialogClickListener).show();
+                    }
+                }
+                else if(data.getIntExtra(getResources().getString(R.string.requestCode), -1) == 1) {
+
+                    String month = data.getStringExtra(getResources().getString(R.string.month));
+                    System.out.println("month " + month);
+                    int visitors = data.getIntExtra(getString(R.string.visitors), 0);
+                    final int id = data.getIntExtra(getResources().getString(R.string.id), 0);
+                    Resort res = get_resort_by_id(id);
+                    res.addVisitors(month, visitors);
+                    dbManager.updateResort(res);
                 }
                 adapter.clear();
                 adapter.addAll(dbManager.getAllResorts());
@@ -146,6 +169,7 @@ public class MainActivity extends AppCompatActivity {
                 Resort resort = new Resort(resortName, resortCoord, resortCountry, resortSlopes);
                 dbManager.addResort(resort);
                 adapter.clear();
+                System.out.println("SIZE" + dbManager.getAllResorts().size());
                 adapter.addAll(dbManager.getAllResorts());
                 adapter.notifyDataSetChanged();
                 DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {

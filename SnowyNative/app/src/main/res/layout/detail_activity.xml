@@ -139,10 +139,10 @@
             android:text="Submit" />
 
         <Button
-            android:id="@+id/resortSendMail"
+            android:id="@+id/setDate"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Send" />
+            android:text="Set date" />
     </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
@@ -152,5 +152,17 @@
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
         app:srcCompat="@android:drawable/ic_dialog_email" />
+
+    <TextView
+        android:text="Visited on:"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/textView" />
+
+    <TextView
+        android:text=""
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/visitedOnDate" />
 
 </LinearLayout>

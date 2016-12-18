@@ -24,10 +24,15 @@ public class Resort {
         this.country = country;
         this.slopes_km = slopes_km;
         this.visitorsPerSeason = new HashMap<>();
+        visitorsPerSeason.put("NOV", 0);
+        visitorsPerSeason.put("DEC", 0);
+        visitorsPerSeason.put("JAN", 0);
+        visitorsPerSeason.put("FEB", 0);
     }
 
     public void addVisitors(String month, Integer number) {
         visitorsPerSeason.put(month, number);
+        System.out.println(month + " month number" + number);
     }
 
     public int getVisitors(int month) {

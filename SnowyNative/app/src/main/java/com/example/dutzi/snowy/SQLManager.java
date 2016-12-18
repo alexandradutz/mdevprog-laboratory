@@ -16,8 +16,8 @@ import java.util.List;
  */
 
 public class SQLManager extends SQLiteOpenHelper {
-    private static final int DATABASE_VERSION = 1;
-    private static final String DATABASE_NAME = "db_resorts_v2";
+    private static final int DATABASE_VERSION = 2;
+    private static final String DATABASE_NAME = "db_resorts_v3";
     private static final String TABLE_RESORTS = "resorts";
     private static final String KEY_ID = "id";
     private static final String KEY_NAME = "name";
@@ -35,13 +35,13 @@ public class SQLManager extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String CREATE_ResortS_TABLE = "CREATE TABLE " + TABLE_RESORTS + "("
+        String CREATE_Resorts_TABLE = "CREATE TABLE " + TABLE_RESORTS + "("
                 + KEY_ID + " INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL," + KEY_NAME + " TEXT,"
                 + KEY_COORDS + " TEXT,"
-                + KEY_COUNTRY + " TEXT," + KEY_SLOPESKM + " TEXT" +
-                KEY_NOV + " TEXT" + KEY_DEC + " TEXT" +
-                KEY_JAN + " TEXT" + KEY_FEB + " TEXT" +")";
-        db.execSQL(CREATE_ResortS_TABLE);
+                + KEY_COUNTRY + " TEXT," + KEY_SLOPESKM + " TEXT," +
+                KEY_NOV + " TEXT," + KEY_DEC + " TEXT," +
+                KEY_JAN + " TEXT," + KEY_FEB + " TEXT" +")";
+        db.execSQL(CREATE_Resorts_TABLE);
     }
 
     @Override
@@ -53,6 +53,7 @@ public class SQLManager extends SQLiteOpenHelper {
     public void addResort(Resort resort) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
+        System.out.println("get visitors " + resort.getVisitors(0));
         values.put(KEY_NAME, resort.getName());
         values.put(KEY_COUNTRY, resort.getCountry());
         values.put(KEY_SLOPESKM, resort.getSlopes_km());
