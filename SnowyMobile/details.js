@@ -11,12 +11,14 @@ import {
    Linking
 } from 'react-native';
 import Chart from 'react-native-chart';
+import DatePicker from 'react-native-datepicker'
 class DetailScreen extends Component {
   constructor(props){
     super(props);
     this.state = {
       id:0,
       name:"name",
+      visitedOn: "2016-02-12",
       visited:false,
       country:"country",
       words:[["november",1],["december",20],["january",10],["february",15]],
@@ -53,13 +55,29 @@ class DetailScreen extends Component {
                                     this.state.id,
                                     this.state.name,
                                     this.state.visited,
-                                    this.state.country); this.props.navigator.pop();}}>
+                                    this.state.country,
+                                    this.state.visitedOn); this.props.navigator.pop();}}>
 
             <Text style={{ color: 'black', padding: 10, fontSize: 15}}>Submit</Text>
         </TouchableHighlight>
         <TouchableHighlight onPress={this.startIntent}>
             <Text style={{ color: 'black', padding: 10, fontSize: 15}}>Send mail</Text>
         </TouchableHighlight>
+
+        <Text  style={{paddingTop: 10}}> Visited on </Text>
+        <DatePicker
+          style={{width: 200, paddingBottom: 20}}
+          date={this.state.visitedOn}
+          mode="date"
+          placeholder="select date"
+          format="YYYY-MM-DD"
+          minDate="2016-05-01"
+          maxDate="2017-02-02"
+          confirmBtnText="Confirm"
+          cancelBtnText="Cancel"
+          onDateChange={(date) => {this.setState({visitedOn: date})}}
+        />
+
         <Chart
                   style={styles.chart}
                   data={this.state.words}
@@ -80,7 +98,7 @@ var styles = StyleSheet.create({
     paddingTop:70,
   },
   chart: {
-       width: 400,
+       width: 300,
        height: 200,
    },
 });

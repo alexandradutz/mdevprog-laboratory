@@ -19,6 +19,7 @@ import {
 
 import ListScreen from './list.js';
 import DetailScreen from './details.js';
+import MyDatePicker from './datepicker.js'
 
 const routes = [
   {
@@ -27,7 +28,10 @@ const routes = [
   }, {
     title: 'Details',
     index: 1
-  }
+}, {
+    title: 'Picker',
+    index: 2
+}
 ]
 
 export default class SnowyMobile extends Component {
@@ -49,6 +53,7 @@ export default class SnowyMobile extends Component {
                   switch (route.index) {
                     case 0: return (<ListScreen ref="listScreen" navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
                     case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
+                    case 2: return (<MyDatePicker navigator={navigator} route={routes[routes.index]} {...route.passProps}></MyDatePicker>);
                   }
                 }
               }

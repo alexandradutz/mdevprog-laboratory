@@ -47,7 +47,7 @@ class ListScreen extends React.Component {
         dataSource: ds.cloneWithRows(['row 1', 'row 2']),
         resorts:[],
         loaded:false,
-        tempResort: {name:'',visited:false,country:''},
+        tempResort: {name:'',visited:false,country:'', visitDate:"2000-01-01"},
         toBeDeleted: 0
     };
   }
@@ -68,7 +68,7 @@ fetchData=async()=>{
             this.state.resorts = JSON.parse(value);
         }
         else {
-            this.setState({tempResort:{name:"name", visited:false, country:"country"}, toBeDeleted:0});
+            this.setState({tempResort:{name:"name", visited:false, country:"country", visitDate:"2000-01-01"}, toBeDeleted:0});
             this.addResort();
         }
 
@@ -86,23 +86,25 @@ this.setState({
 del(){
     var x = this.state.resorts.slice();
     x.splice(this.state.toBeDeleted, 1);
-    AsyncStorage.setItem('@Resorts:storage', JSON.stringify(x));
+    var newSet = x.slice();
+    AsyncStorage.setItem('@Resorts:storage', JSON.stringify(newSet));
     this.setState({
-        dataSource:this.state.dataSource.cloneWithRows(x),
-        resorts:x
+        dataSource:this.state.dataSource.cloneWithRows(newSet),
+        resorts:newSet,
     });
 }
 
 delAlert(){
     Alert.alert( 'Delete Action', 'Are you sure you want to delete this?',
         [ {text: 'Cancel', onPress: () => console.log('Cancel Pressed'), style: 'cancel'},
-          {text: 'OK', onPress: () => {this.del}}, ] );
+          {text: 'OK', onPress: () => this.del()}, ] );
 }
 
 addResort(){
      var x = this.state.resorts.slice();
      if(this.state.tempResort.name != "") {
-         var res1 = {id:x.length, name:this.state.tempResort.name, visited:this.state.tempResort.visited, country:this.state.tempResort.country};
+         var res1 = {id:x.length, name:this.state.tempResort.name, visited:this.state.tempResort.visited, country:this.state.tempResort.country,
+                        visitDate:"2000-01-01"};
          x.push(res1);
      }
      AsyncStorage.setItem('@Resorts:storage', JSON.stringify(x));
@@ -112,7 +114,7 @@ addResort(){
     });
  }
 
- updateResort(id, n, v, c) {
+ updateResort(id, n, v, c, date) {
      var x = this.state.resorts.slice();
      var i = 0;
      while(i < x.length)
@@ -128,11 +130,16 @@ addResort(){
      if(i < x.length)
      {
          x[i].name = n;
+         x[i].country = c;
+         x[i].visited = v;
+         x[i].visitDate = date;
      }
-     AsyncStorage.setItem('@Resorts:storage', JSON.stringify(x));
+     var newSet = x.slice();
+     AsyncStorage.setItem('@Resorts:storage', JSON.stringify(newSet));
+     console.error(newSet);
      this.setState({
-         dataSource: this.state.dataSource.cloneWithRows(x),
-         resorts: x,
+         dataSource: this.state.dataSource.cloneWithRows(newSet),
+         resorts: newSet,
     });
 
  }
@@ -178,6 +185,7 @@ addResort(){
                    name: rowData.name,
                    visited: rowData.visited,
                    country: rowData.country,
+                   visitedOn: rowData.visitedOn,
                    addFunction: this.addResort,
                    delFunction: this.del,
                    updateResort: this.updateResort
