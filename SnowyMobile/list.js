@@ -59,9 +59,11 @@ class ListScreen extends React.Component {
       this.updateResort = this.updateResort.bind(this);
 };
 
-fetchData=async()=>{
-    // console.error("THIS");
+componentWillUpdate(){
+    this.fetchData().done();
+};
 
+fetchData=async()=>{
     const value = await AsyncStorage.getItem('@Resorts:storage');
     try {
         if(value) {
@@ -136,7 +138,7 @@ addResort(){
      }
      var newSet = x.slice();
      AsyncStorage.setItem('@Resorts:storage', JSON.stringify(newSet));
-     console.error(newSet);
+    //  console.error(newSet);
      this.setState({
          dataSource: this.state.dataSource.cloneWithRows(newSet),
          resorts: newSet,

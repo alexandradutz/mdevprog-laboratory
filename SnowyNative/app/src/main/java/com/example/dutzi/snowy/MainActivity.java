@@ -18,6 +18,7 @@ import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import com.facebook.FacebookSdk;
 
 import com.example.dutzi.snowy.model.Resort;
 
@@ -87,6 +88,14 @@ public class MainActivity extends AppCompatActivity {
                 adapter.clear();
                 adapter.addAll(dbManager.getAllResorts());
                 adapter.notifyDataSetChanged();
+            }
+        }
+        if(requestCode == 1) {
+            if(resultCode== Activity.RESULT_OK) {
+                System.out.println("OKOKOKOKOKOKOKOKOKOK");
+            }
+            else {
+                setContentView(null);
             }
         }
     }
@@ -188,5 +197,8 @@ public class MainActivity extends AppCompatActivity {
                 builder.setMessage("Added!").setPositiveButton("Ok", dialogClickListener).show();
             }
         });
+
+        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+        startActivityForResult(intent, 1);
     }
 }
