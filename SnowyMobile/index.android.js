@@ -20,7 +20,7 @@ import {
 import ListScreen from './list.js';
 import DetailScreen from './details.js';
 import MyDatePicker from './datepicker.js'
-
+import Login from "./login.js";
 const routes = [
   {
     title: 'Snowy',
@@ -31,12 +31,13 @@ const routes = [
 }, {
     title: 'Picker',
     index: 2
+}, {
+    title: 'Login',
+    index: 3
 }
 ]
-
 export default class SnowyMobile extends Component {
-  // state = {
-  // }
+
 
   render() {
     return (
@@ -46,7 +47,7 @@ export default class SnowyMobile extends Component {
               barStyle="light-content"
             />
             <Navigator
-              initialRoute={routes[0]}
+              initialRoute={routes[3]}
               initialRouteStack={routes}
               renderScene={
                 (route, navigator) => {
@@ -54,6 +55,7 @@ export default class SnowyMobile extends Component {
                     case 0: return (<ListScreen ref="listScreen" navigator={navigator} route={routes[route.index]} {...route.passProps}></ListScreen>);
                     case 1: return (<DetailScreen navigator={navigator} route={routes[route.index]} {...route.passProps}></DetailScreen>);
                     case 2: return (<MyDatePicker navigator={navigator} route={routes[routes.index]} {...route.passProps}></MyDatePicker>);
+                    case 3: return (<Login/>);
                   }
                 }
               }
@@ -67,6 +69,14 @@ export default class SnowyMobile extends Component {
                    LeftButton: (route, navigator, index, navState) => {
                      if (route.index == 0){
                        return null;
+                     }
+                     else if(route.index == 3)
+                     {
+                         return (
+                         <TouchableHighlight onPress={()=>{navigator.pop();navigator.pop();navigator.pop();}}>
+                           <Text style={styles.navigationBarText}>Back</Text>
+                         </TouchableHighlight>
+                     )
                      }
                      return (
                        <TouchableHighlight onPress={()=>navigator.pop()}>

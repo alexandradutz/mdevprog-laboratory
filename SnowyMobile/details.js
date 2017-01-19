@@ -22,6 +22,7 @@ class DetailScreen extends Component {
       visited:false,
       country:"country",
       words:[["november",1],["december",20],["january",10],["february",15]],
+      _key: "",
       url: 'mailto:?subject='+this.props.name+"&body="+this.props.country+"\n\n\n\n================\nBackup from your Snowy account"
     };
   }
@@ -38,7 +39,8 @@ class DetailScreen extends Component {
         id:this.props.id,
         name:this.props.name,
         visited:this.props.visited,
-        country:this.props.country
+        country:this.props.country,
+        _key: this.props._key
       }
     )
   }
@@ -56,7 +58,8 @@ class DetailScreen extends Component {
                                     this.state.name,
                                     this.state.visited,
                                     this.state.country,
-                                    this.state.visitedOn); this.props.navigator.pop();}}>
+                                    this.state.visitedOn,
+                                    this.state._key); this.props.navigator.pop();}}>
 
             <Text style={{ color: 'black', padding: 10, fontSize: 15}}>Submit</Text>
         </TouchableHighlight>

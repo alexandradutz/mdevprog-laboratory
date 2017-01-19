@@ -21,6 +21,7 @@ import android.widget.TextView;
 import com.facebook.FacebookSdk;
 
 import com.example.dutzi.snowy.model.Resort;
+import com.google.android.gms.common.GoogleApiAvailability;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -90,20 +91,20 @@ public class MainActivity extends AppCompatActivity {
                 adapter.notifyDataSetChanged();
             }
         }
-        if(requestCode == 1) {
-            if(resultCode== Activity.RESULT_OK) {
-                System.out.println("OKOKOKOKOKOKOKOKOKOK");
-            }
-            else {
-                setContentView(null);
-            }
-        }
+//        if(requestCode == 1)
+//        {
+//            if(resultCode==Activity.RESULT_OK) { }
+//            else{
+//                setContentView(null);
+//            }
+//        }
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        GoogleApiAvailability.getInstance().makeGooglePlayServicesAvailable(this);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
 
         listView = (ListView) findViewById(R.id.list_view);
@@ -197,8 +198,8 @@ public class MainActivity extends AppCompatActivity {
                 builder.setMessage("Added!").setPositiveButton("Ok", dialogClickListener).show();
             }
         });
-
-        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-        startActivityForResult(intent, 1);
+//        setSupportActionBar(toolbar);
+//        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+//        startActivityForResult(intent, 1);
     }
 }

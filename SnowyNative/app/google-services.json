@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "594421968141",
+    "firebase_url": "https://snowynative-dd7ff.firebaseio.com",
+    "project_id": "snowynative-dd7ff",
+    "storage_bucket": "snowynative-dd7ff.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594421968141:android:e01671f5763fc0c8",
+        "android_client_info": {
+          "package_name": "com.example.dutzi.snowy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594421968141-1gomtac8u8hdtuldjfj08j7t79n0730h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.dutzi.snowy",
+            "certificate_hash": "89FDA3EA6EF37D7E49F3D84EDE86659A6992062E"
+          }
+        },
+        {
+          "client_id": "594421968141-09n903n646p07g6564vn7c6b0tcq3qpo.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD_A3ZRc8w1OUvO5DHqVOosQ0U49_ZN9rY"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594421968141-09n903n646p07g6564vn7c6b0tcq3qpo.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

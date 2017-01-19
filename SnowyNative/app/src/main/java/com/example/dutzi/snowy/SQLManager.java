@@ -5,11 +5,20 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.dutzi.snowy.model.Resort;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.ResponseBody;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 /**
  * Created by dutzi on 07.12.2016.
@@ -64,6 +73,25 @@ public class SQLManager extends SQLiteOpenHelper {
         values.put(KEY_FEB, resort.getVisitors(3));
         resort.setId((int)db.insert(TABLE_RESORTS, null, values));
         db.close();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://snowyreact.firebaseio.com/")//url of firebase app
+                .addConverterFactory(GsonConverterFactory.create())//use for convert JSON file into object
+                .build();
+
+        REST service = retrofit.create(REST.class);
+        Call<Resort> c = service.addResort(resort);
+        c.enqueue(new Callback<Resort>() {
+            @Override
+            public void onResponse(Call<Resort> call, Response<Resort> response) {
+                Log.e("RESPONSE",response.raw().toString());
+            }
+
+            @Override
+            public void onFailure(Call<Resort> call, Throwable t) {
+                Log.e("RESPONSE","FAILURE");
+            }
+        });
     }
 
     public Resort getResort(int id) {
@@ -104,7 +132,7 @@ public class SQLManager extends SQLiteOpenHelper {
         return ResortList;
     }
 
-    public int updateResort(Resort resort) {
+    public int updateResort(final Resort resort) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
         values.put(KEY_NAME, resort.getName());
@@ -115,6 +143,46 @@ public class SQLManager extends SQLiteOpenHelper {
         values.put(KEY_DEC, resort.getVisitors(1));
         values.put(KEY_JAN, resort.getVisitors(2));
         values.put(KEY_FEB, resort.getVisitors(3));
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://snowyreact.firebaseio.com/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+
+        final REST service = retrofit.create(REST.class);
+        Call<ResponseBody> c = service.getId("\"id\"",String.valueOf(resort.getId() - 1));
+        c.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.e("RESPONSE",response.raw().toString());
+                try {
+                    String id = response.body().string().split(":")[0].replace("\"","").replace("{","");
+                    Log.e("UPDATE_ID",id);
+                    Call<Resort> r = service.updateResort(id,resort);
+                    r.enqueue(new Callback<Resort>() {
+                        @Override
+                        public void onResponse(Call<Resort> call, Response<Resort> response) {
+                            Log.e("UPDATE_RESPONSE",response.raw().toString());
+                        }
+
+                        @Override
+                        public void onFailure(Call<Resort> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RESPONSE","FAILURE");
+            }
+        });
+
         return db.update(TABLE_RESORTS, values, KEY_ID + " = ?",
                 new String[]{String.valueOf(resort.getId())});
     }
@@ -122,7 +190,46 @@ public class SQLManager extends SQLiteOpenHelper {
     public void deleteResort(Resort resort) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_RESORTS, KEY_ID + " = ?",
-                new String[] { String.valueOf(resort.getId()) });
+                new String[] { String.valueOf(resort.getId() - 1) });
         db.close();
+
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("https://snowyreact.firebaseio.com/")//url of firebase app
+                .addConverterFactory(GsonConverterFactory.create())//use for convert JSON file into object
+                .build();
+
+        final REST service = retrofit.create(REST.class);
+        Call<ResponseBody> c = service.getId("\"id\"",String.valueOf(resort.getId()-1));
+        c.enqueue(new Callback<ResponseBody>() {
+            @Override
+            public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
+                Log.e("RESPONSE",response.raw().toString());
+                try {
+                    String id = response.body().string().split(":")[0].replace("\"","").replace("{","");
+                    Log.e("DELETE_ID",id);
+                    Call<Resort> r = service.removeResort(id);
+                    r.enqueue(new Callback<Resort>() {
+                        @Override
+                        public void onResponse(Call<Resort> call, Response<Resort> response) {
+                            Log.e("DELETE_RESPONSE",response.raw().toString());
+                        }
+
+                        @Override
+                        public void onFailure(Call<Resort> call, Throwable t) {
+                            t.printStackTrace();
+                        }
+                    });
+                }
+                catch (IOException e){
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<ResponseBody> call, Throwable t) {
+                Log.e("RESPONSE","FAILURE");
+            }
+        });
     }
 }

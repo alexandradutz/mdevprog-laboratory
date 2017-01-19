@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">SnowyMobile</string>
+    <string name="fb_app_id">834123010059348</string>
+    <string name="fb_login_protocol_scheme">fb834123010059348</string>
 </resources>
